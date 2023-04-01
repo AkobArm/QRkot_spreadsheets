@@ -59,14 +59,14 @@ async def spreadsheets_update_value(
         'values': table_values
     }
     all_lines = len(table_values)
-    if all_lines < 100:
-        await wrapper_services.as_service_account(
-            service.spreadsheets.values.update(
-                spreadsheetId=spreadsheet_id,
-                range=f'R1C1:R{all_lines}C{all_lines}',
-                valueInputOption='USER_ENTERED',
-                json=update_body
-            )
-        )
-    else:
+    if all_lines >= 100:
         raise Exception('Слишком много строк')
+
+    await wrapper_services.as_service_account(
+        service.spreadsheets.values.update(
+            spreadsheetId=spreadsheet_id,
+            range=f'R1C1:R{all_lines}C{all_lines}',
+            valueInputOption='USER_ENTERED',
+            json=update_body
+        )
+    )
